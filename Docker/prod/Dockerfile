@@ -11,6 +11,12 @@ WORKDIR /app
 # to make this folder available when pushed to docker hub
 COPY ./app /app
 
+WORKDIR /app/linnea_master/linnea
+RUN python setup.py build
+RUN python setup.py install 
+
+WORKDIR /app
+
 # Create a user. -D represents this user can only run apps.
 RUN adduser -D user
 

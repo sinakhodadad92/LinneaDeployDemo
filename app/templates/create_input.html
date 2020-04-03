@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Linnea</title>
+    {% load static %}
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-red.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+
+    <link rel="stylesheet" href=" {% static 'css/style.css' %}">
+    <link rel="stylesheet" href=" {% static 'css/modal_style.css' %}">
+    <link rel="stylesheet" href=" {% static 'css/getmdl-select.min.css' %}">
+    <link rel="stylesheet" href=" {% static 'css/w3.css' %}">
+
+    <script src="{% static 'js/getmdl-select.min.js' %}"></script>
+    <script src="{% static 'js/jquery.ui.touch-punch.min.js' %}"></script>
+    <script src="{% static 'js/FileSaver.min.js' %}"></script>
+
+
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #111627;">
+      <a class="navbar-brand" href="#">Linnea</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link" href="http://hpac.rwth-aachen.de/publications/author/Barthels">Publications</a>
+          <a class="nav-item nav-link" href="https://github.com/HPAC/linnea">Github</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="mdl-grid" style="border: 1px solid #FFFFFF">
+      <div class="mdl-layout-spacer"></div>
+      <div class="mdl-cell mdl-cell--9-col">
+        <p style="margin: auto; font-size: 1em;">Input a <strong>Linear algebra expression</strong> to generate code that computes it:</p>
+        <p style="margin: auto; font-size: 1em;">For Specifying <strong> Vector </strong> please start the vector's name with <strong> lower alphabet </strong>, and for specifying <strong> Matrix </strong> start it with <strong>capital alphabet </strong> </p>
+        <table style="width: 100%">
+            <tr>
+              <td>
+                <div class="mdl-textfield mdl-js-textfield is-dirty is-upgraded" style="width: 100%">
+                  <textarea id="txtExpr" class="mdl-textfield__input" placeholder="Enter Expression:" value="" style="font-family: monospace" spellcheck="false" autocomplete="false" autocorrect="false" autocapitalize="false"></textarea>
+                  <span id="lblError" class="mdl-textfield__error" style="font-size: 14px" ></span>
+                </div>
+              </td>
+              <td style="width: 32px">
+                <div style="position:relative">
+                  <button id="btnExamples" class="mdl-button mdl-js-button mdl-button--icon" style="width: 100%">
+                    <i class="material-icons">more_vert</i>
+                  </button>
+                  <ul id="listExamples" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" style="font-size: 14px" for="btnExamples"></ul>
+                </div>
+              </td>
+              <td style="width: 200px">
+              <form method="POST" id="post-form">
+                  {% csrf_token %}
+                  <input type="hidden" class="form-control" id="description" placeholder="Title" value="4444">
+
+                  <button type="submit" id="btnGetKernel" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect demo-btn" onclick="generateInput()"> Generate Kernel </button>
+              </form>
+              </td>
+            </tr>
+          </table>
+      </div>
+      <div class="mdl-layout-spacer"></div>
+    </div>
+
+    <div id="tblFormats" class="mdl-grid" style="padding-top: 0px; padding-bottom: 0px">
+      <div class="mdl-layout-spacer"></div>
+      <div class="mdl-cell mdl-cell--9-col">
+        <table class="mdl-data-table mdl-js-data-table" style="width: 100%; margin-bottom: 8px">
+          <thead>
+            <tr>
+              <th class="mdl-data-table__cell--non-numeric" width="100px;"><div align="center" style="position:relative; top:-1px"><big>Variables</big></div></th>
+              <th class="mdl-data-table__cell--non-numeric" style="padding-left: auto">
+                <div style="display:inline"><big>Format&nbsp;</big></div>
+                <div style="display:inline">(Enter the number of rows and columns)</div>
+                <div style="display:inline">(Select the Property)</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody id="listLinneas"></tbody>
+        </table>
+      </div>
+      <div class="mdl-layout-spacer"></div>
+    </div>
+
+
+
+    <div class="mdl-grid" style="padding-top: 6px; ; border: 1px solid #FFFFFF;">
+      <div class="mdl-layout-spacer"></div>
+      <div class="mdl-cell mdl-cell--9-col">
+        <div id="panelKernels" class="mdl-tabs mdl-js-tabs mdl-js-ripple-effect">
+          <table style="width: 100%">
+            <tr>
+              <td>
+                <div class="mdl-tabs__tab-bar" style="justify-content: flex-start">
+                    <a href="#compute-panel" class="mdl-tabs__tab is-active">Algorithm Generated</a>
+                </div>
+              </td>
+              <td style="width: 200px" align="right">
+                <button id="btnDownloads" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect demo-btn" style="width: 200px;" onclick = "downloadOutput()">Download</button>
+              </td>
+            </tr>
+          </table>
+          <div class="mdl-tabs__panel is-active" id="compute-panel">
+            <pre style="margin-top: 0px">
+              <code id="txtComputeLoops" class="lang-cpp" val="">/* The generated Algorithm will appear here */</code>
+            </pre>
+          </div>
+        </div>
+      </div>
+      <div class="mdl-layout-spacer"></div>
+
+
+
+    </div>
+
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        </br>
+
+        <div class="w3-container">
+
+          <table class="w3-table-all w3-hoverable">
+            <thead>
+              <tr class="w3-white">
+                <th>Property Set 1</th>
+                <th>Property Set 2</th>
+                <th>Property Set 3</th>
+              </tr>
+            </thead>
+            <!-- 1 -->
+            <tr>
+              <td>
+                <label class="container">Symmetric
+                  <input type="checkbox" name="properties" value="Symmetric">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <label class="container">FullRank
+                  <input type="checkbox" name="properties" value="FullRank">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <label class="container">SPD
+                  <input type="checkbox" name="properties" value="SPD">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+            </tr>
+            <!-- 2 -->
+            <tr>
+              <td>
+                <label class="container">RowPanel
+                  <input type="checkbox" name="properties" value="RowPanel">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <label class="container">Diagonal
+                  <input type="checkbox" name="properties" value="Diagonal">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <label class="container">Tridiagonal
+                  <input type="checkbox" name="properties" value="Tridiagonal">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+            </tr>
+            <!-- 3 -->
+            <tr>
+              <td>
+                <label class="container">Banded
+                  <input type="checkbox" name="properties" value="Banded">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <label class="container">LowerTriangular
+                  <input type="checkbox" name="properties" value="LowerTriangular">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <label class="container">UpperTriangular
+                  <input type="checkbox" name="properties" value="UpperTriangular">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+            </tr>
+            <!-- 4 -->
+            <tr>
+              <td>
+                <label class="container">UnitDiagonal
+                  <input type="checkbox" name="properties" value="UnitDiagonal">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <label class="container">Symmetric
+                  <input type="checkbox" name="properties" value="Symmetric">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <label class="container">Hessenberg
+                  <input type="checkbox" name="properties" value="Hessenberg">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+            </tr>
+            <!-- 5 -->
+            <tr>
+              <td>
+                <label class="container">Orthogonal
+                  <input type="checkbox" name="properties" value="Orthogonal">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <label class="container">Square
+                  <input type="checkbox" name="properties" value="Square">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+              <td>
+                <label class="container">Non-singular
+                  <input type="checkbox" name="properties" value="Non-singular">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+            </tr>
+            <!-- 6 -->
+            <tr>
+              <td>
+                <label class="container">Positive
+                  <input type="checkbox" name="properties" value="Positive">
+                  <span class="checkmark"></span>
+                </label>
+              </td>
+            </tr>
+
+
+          </table>
+          <div class="mdl-layout-spacer"></div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button id="clear" onclick='clearProperty(this)' class="button button5">clear</button>
+          <button id="save" onclick='saveProperty(this)' class="button button6">Save</button>
+        </div>
+
+        <!-- <div class="modal-footer">
+          <button id="save" onclick='saveProperty(this)' class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" type="button" name="save-details">Save</button>
+        </div> -->
+
+
+      </div>
+
+    </div>
+
+
+    <!-- </footer> -->
+    <div style="position: fixed; 
+                left: 0; 
+                bottom: 0; 
+                width: 100%; 
+                background-color: #737373; 
+                color: white;
+                text-align: center;">
+      <p>&copy; Copyright 2020</p>
+    </div>
+
+
+
+  </body>
+  <script type="text/javascript" src="{% static 'js/start.js' %}"></script>
+  <script>
+      $(document).on('submit', '#post-form',function(e){
+      e.preventDefault();
+      $.ajax({
+          type:'POST',
+          url:'{% url "create" %}',
+          data:{
+              description:$('#description').val(),
+              csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+              action: 'post'
+          },
+          success:function(json){
+            document.getElementById("post-form").reset();
+
+            $("#lblError").css('visibility', 'hidden');
+            $('#txtComputeLoops').val(json.answer);
+            $('#txtComputeLoops').html(json.answer);
+            out(json.description);
+
+
+          },
+          error : function(xhr,errmsg,err) {
+
+            console.log(xhr.status + ": " + xhr.responseText);
+            $('#txtComputeLoops').val("Your input expression had syntax error :(");
+            $('#txtComputeLoops').html("Your input expression had syntax error :(");
+
+            $("#lblError").css('visibility', 'visible');
+            $('#lblError').val('Error: Invalid Expression!');
+            $('#lblError').html('Error: Invalid Expression!');
+          }
+        });
+      });
+  </script>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-93058524-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+</html>
