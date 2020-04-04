@@ -1,29 +1,32 @@
+
+
 var examples = {
+  
   input1: {
     name: "Least Squares",
-    expr: "b = inv(trans ...",
+    expr: "\\(b = (X^TX)^{-1}X^Ty\\)",
     code: "b = inv(trans(X)*X)*trans(X)*y",
   },
   input2:{
     name: "Generalized Least Squares",
-    expr: "z = inv(trans(X) ...",
+    expr: "\\(z = (X^TS^{-1}X)^{-1}X^TS^{-1}y\\)",
     code: "z = inv(trans(X)*inv(S)*X)*trans(X)*inv(S)*y",
-  },
-  input3:{
-    name: "Triangular Matrix Inversion",
-    expr: "X10 = L10 * inv(L00) ...",
-    code: "X10 = L10*inv(L00)\nX20 = L20+(inv(L22)*L21*inv(L11)*L10)\nX11 = inv(L11)\nX21 = inv(L22)*L21*-1",
-  },
-  input4:{
-    name: "Image Restoration",
-    expr: "H_dag = trans(H) * ... \n ",
-    code: "H_dag = trans(H)*inv(H*trans(H))\ny_k = (H_dag*y)+(((I+(H*H_dag*-1))*x)",
-  },
-  input5:{
-    name: "Stochastic Newton",
-    expr: "Bout = k * inv * ...",
-    code: "Bout = ((k*inv(kminus1))*Bin*(In+(minus1*trans(A)*wk*(inv((kminus1*I1)+(trans(wk)*A*Bin*trans(A)*wk))*trans(wk)*A*Bin",
   }
+  // input3:{
+  //   name: "Triangular Matrix Inversion",
+  //   expr: "X10 = L10 * inv(L00) ...",
+  //   code: "X10 = L10*inv(L00)\nX20 = L20+(inv(L22)*L21*inv(L11)*L10)\nX11 = inv(L11)\nX21 = inv(L22)*L21*-1",
+  // },
+  // input4:{
+  //   name: "Image Restoration",
+  //   expr: "H_dag = trans(H) * ... \n ",
+  //   code: "H_dag = trans(H)*inv(H*trans(H))\ny_k = (H_dag*y)+(((I+(H*H_dag*-1))*x)",
+  // },
+  // input5:{
+  //   name: "Stochastic Newton",
+  //   expr: "Bout = k * inv * ...",
+  //   code: "Bout = ((k*inv(kminus1))*Bin*(In+(minus1*trans(A)*wk*(inv((kminus1*I1)+(trans(wk)*A*Bin*trans(A)*wk))*trans(wk)*A*Bin",
+  // }
   
 };
 
@@ -33,9 +36,9 @@ for (var e in examples) {
   listExamplesBody += e;
   listExamplesBody += "\" class=\"mdl-menu__item\">";
   listExamplesBody += examples[e].name;
-  listExamplesBody += ":&nbsp;  <code>";
+  listExamplesBody += ":&nbsp;  ";
   listExamplesBody += examples[e].expr;
-  listExamplesBody += "</code></li>";
+  listExamplesBody += "</li>";
 }
 $("#listExamples").html(listExamplesBody);
 
@@ -44,6 +47,8 @@ for (var e in examples) {
     var setExample = function() {
       $("#txtExpr").val(code);
       $("#txtExpr").html(code);
+
+      $("#lblError").css('visibility', 'hidden');
 
       model.setInput(code);
     };

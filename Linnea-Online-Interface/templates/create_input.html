@@ -11,7 +11,8 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
-
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-red.min.css">
@@ -52,6 +53,8 @@
       <div class="mdl-cell mdl-cell--9-col">
         <p style="margin: auto; font-size: 1em;">Input a <strong>Linear algebra expression</strong> to generate code that computes it:</p>
         <p style="margin: auto; font-size: 1em;">For Specifying <strong> Vector </strong> please start the vector's name with <strong> lower alphabet </strong>, and for specifying <strong> Matrix </strong> start it with <strong>capital alphabet </strong> </p>
+        
+
         <table style="width: 100%">
             <tr>
               <td>
@@ -65,7 +68,7 @@
                   <button id="btnExamples" class="mdl-button mdl-js-button mdl-button--icon" style="width: 100%">
                     <i class="material-icons">more_vert</i>
                   </button>
-                  <ul id="listExamples" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" style="font-size: 14px" for="btnExamples"></ul>
+                  <ul id="listExamples" class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" style="font-size: 8px" for="btnExamples"></ul>
                 </div>
               </td>
               <td style="width: 200px">
