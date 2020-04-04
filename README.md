@@ -1,8 +1,12 @@
-# DjangoDeployTemplate
+# Linnea Deploy Code
 
 ### Details
 
-> There are separate docker-compose scripts for development and production
+> Recursive clone this repo
+
+```bash
+git clone https://github.com/as641651/LinneaDeployDemo.git --recursive
+```
 
 > The production vesrsion serves django with gunicorn and nginx
 
