@@ -16,14 +16,15 @@ RUN pip install -r /requirements.txt
 RUN apk del .tmp-build-deps
 
 RUN mkdir /app
-WORKDIR /app
+
 
 # to make this folder available when pushed to docker hub
-COPY ./app /app
+COPY ./Linnea-Online-Interface /app
+COPY ./linnea /app/linnea
 
-WORKDIR /app/linnea_master/linnea
+WORKDIR /app/linnea
 RUN python setup.py build
-RUN python setup.py install 
+RUN python setup.py install
 
 WORKDIR /app
 

@@ -5,38 +5,31 @@ services:
       build:
         context: .
         dockerfile: Docker/prod/Dockerfile
-      # maps port <port_from_host_machine>:<port_in_container>. They can be same. But usually they are different for security reasons
       ports:
         - "8009:8000"
-      # maps folder from host to container
       volumes:
-        - ./app:/app
+        - ./Linnea-Online-Interface:/app
         # this volume is created when collectstatic command is run
         # set static_root = /vol/static in settings.py
         - static_files:/vol/static
       command: >
         sh -c "python manage.py wait_for_db &&
                python manage.py collectstatic --noinput &&
-               python manage.py makemigrations &&
                python manage.py migrate &&
                gunicorn -w 4 linnea_web.wsgi -b 0.0.0.0:8000"
-      # credentials of postgres user as env variables. This will be accessed in settings.py
       environment:
          - DB_HOST=db
          - DB_NAME=app
          - DB_USER=postgres
          - DB_PASS=password
       depends_on:
-        - db
-
+         - db
 
     db:
       image: postgres:12-alpine
-      # data_base created inside container will be mapped back on host machine. It is better to have this folder outside the application folder for sequrity reasons. 
       volumes:
-         - ../linnea_website_pgdb:/var/lib/postgresql/data/
+         - ../linnea_wesite_pgdb:/var/lib/postgresql/data/
          #- database:/var/lib/postgresql/data/
-      #spawns a postgres container on port 5432 and creates a new user with the following credentials 
       environment:
          - POSTGRES_DB=app
          - POSTGRES_USER=postgres
@@ -51,15 +44,11 @@ services:
       volumes:
         # app creates a docker volume, which is inturn mapped here
         - static_files:/vol/static
-        # - database:/vol/static/db
         - ${PWD}/Docker/prod/nginx/servers.conf:/etc/nginx/conf.d/servers.conf
       depends_on:
-        - app
+         - app
 
-
-           
 volumes:
   # gets created when collectstatic command is run
   # because of internal mapping, we never see this folder outside
   static_files:
-  database:
